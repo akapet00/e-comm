@@ -1,0 +1,29 @@
+[project]
+name = "e-comm"
+version = "0.1.0"
+description = "Multilingual recommender WhatsApp chatbot for e-commerce firms."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "bs4>=0.0.2",
+    "dotenv>=0.9.9",
+    "langchain>=0.3.25",
+    "langchain-anthropic>=0.3.14",
+    "langchain-ollama>=0.3.3",
+    "langgraph>=0.4.7",
+    "numpy>=2.2.6",
+    "scikit-learn>=1.6.1",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D100",  # ignore warning on missing docstrings in public module
+    "T201",  # ignore warning on using the print function
+    "ERA001",  # allow commented-out code to exist
+]
