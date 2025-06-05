@@ -132,9 +132,18 @@ TBA.
 
 ## Evaluation and metrics
 
-- What robust success metrics can be used to evaluate the system in production (e.g., engagement rates, conversion rates, accuracy of metadata extraction, recommendation relevance, user satisfaction)?
+**Metadata extraction.** The simplest approach is to evaluate parsed fields against a gold standard (manually labeled subset of newsletters). Traditionally, evaluation metrics such as precision, recall, and F1 core are used for each field (name, price, etc.):
+- Precision. The ratio of correctly extracted instances to the total extracted instances.
+- Recall. The ratio of correctly extracted instances to the total relevant instances in the gold standard.
+- F1 score. The harmonic mean of precision and recall, providing a balance between the two.
 
-TBA.
+**Recommendation performance.** Online metrics (via A/B tests or historical logs) such as click-through rate (CTR) and conversion rate (CR) can be tracked on recommended items. Offline, the precision@k and recall@k on held-out interaction data can be measured. Fore example, if a user clicked an item, did the top-K list contain that item? Also additional consideration such as diversity or coverage metrics, customer satisfication, etc. for multi-lingual balance could be measured.
+
+**Conversational Relevance.** For the chatbot, the best thing is to evaluate the response quality. Some automatic metrics are BLEU and/or ROUGE scores which measure of overlap between the system-generated responses and reference responses using n-gram precision in slightly different way (though both are not well-suited for conversational recommender models [[Jan2023](#Jan2023)]). Regarding the manual evaluation, well-trained/native speaker judge could assess whether the chatbot’s recommendations are relevant, coherent, and in appropriate tone. Additionally, Likert scales (in psyhometrics, a response scale frequently used in questionnaires to measure attitudes, perceptions, or beliefs) could be utilized in order to assess the fluency and usefulness, and intent recognition accuracy.
+
+**Overall system.** Business KPIs like email engagement lift (e.g., did personalization increase newsletter click rates?) and chatbot engagement (sessions per user) should be tracked. Log conversational feedback (e.g. thumbs up/down) can be collected to refine recommendations and improve upon the language models and/or agent chatbots.
+
+
 
 ## Showcase
 
