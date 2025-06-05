@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-from extractor import HTML_CONTENT, extract_data
+from extract_data import HTML_CONTENT, extract_data
 
 
 def main() -> None:
@@ -32,6 +32,7 @@ def main() -> None:
     for i, prod in enumerate(products):
         if np.max(sim_matrix[i]) > threshold:
             final_recs.append(prod)
+    final_recs = {final_rec["name"] for final_rec in final_recs}
     print(f"Recommendations based on product-product similarity: {final_recs}")
 
 
