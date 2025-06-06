@@ -31,6 +31,7 @@ dev = [
 select = ["ALL"]
 ignore = [
     "D100",  # ignore warning on missing docstrings in public module
+    "D101",  # ignore warning on missing docstrings in public class
     "T201",  # ignore warning on using the print function
     "ERA001",  # allow commented-out code to exist
 ]
