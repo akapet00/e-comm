@@ -1,6 +1,6 @@
-# Recruitment assignment
+# E-commerce recommender chatbot
 
-Original recruitment assignment for the senior AI research scientist position is available in the `material` subdirectory.
+Original assignment is available in the `material` subdirectory.
 
 ## Prerequisites
 
