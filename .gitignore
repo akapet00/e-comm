@@ -11,3 +11,11 @@ wheels/
 
 # Environment variables
 .env
+
+# Unnecessary files
+prototype/prompt.iypnb
+prototype/prompt.py
+prototype/res.txt
+prompt.iypnb
+prompt.py
+res.txt
