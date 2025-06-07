@@ -144,15 +144,6 @@ In this example, we fit a simple character-level vectorizer (as we opted not to 
 
 More broadly, recent surveys note a trend of using large pre-trained LMs (GPT, ChatGPT, Claude) to augment or endow recommenders with language understanding and generation [[Jan2023](#Jan2023)]. For multilingual scenarios, models like ChatGLM (Chinese-centric) or Google’s multilingual PaLM help handle Chinese queries and product descriptions. Frameworks such as LangChain or LangGraph can orchestrate LLM prompts, retrieval (via vector stores or KBs), and other pipelines in a chatbot. 
 
-## Architectural proposal
-
-- What specific components (e.g., Data pipelines, NLP extraction methods, embedding models, generative AI models, recommendation algorithms) are necessary?
-- Which NLP tools or models are suitable for multilingual processing, particularly for Chinese? 
-- How will the data extraction system integrate with a generative conversational recommender system (recommendation logic, personalization capabilities, 
-conversational flow)?
-
-TBA.
-
 ## Evaluation and metrics
 
 **Metadata extraction.** The simplest approach is to evaluate parsed fields against a gold standard (manually labeled subset of newsletters). Traditionally, evaluation metrics such as precision, recall, and F1 core are used for each field (name, price, etc.):
@@ -168,15 +159,41 @@ TBA.
 
 ## Showcase
 
-Check out the `prototype` subdirectory. Within, there are two notebooks: `simple.ipynb` and `full.ipynb`.
+Check out the `prototype` subdirectory. Within, there is the `main.ipynb` notebook. 
 
-The first one is hand coded and it contains a very simple agentic AI chatbot. The chatbot has the possibility of retrieving historical data on newsletters. It also understands the user intent and has memory to provide better service and maximize the likelihood of selling the advertised products. Its architecture consists of the several components:
+The first part of the notebook contains a hand coded (very simple though) agentic AI chatbot. The chatbot has the possibility of retrieving historical data on newsletters. It also understands the user intent and has memory to provide better service and maximize the likelihood of selling the advertised products. Its architecture consists of the several components:
 
 ---
 
-![alt text](media/prototype-simple.png)
+![alt text](media/prototype.png)
 
-The second prototype is "vibe coded" with the help of Claude Sonnet 4 by Anthropic, and, [as advertised](https://www.anthropic.com/news/claude-4), it truly excels at all coding tasks I tried it on. It is accessed through Cline, [the collaborative AI coder](https://cline.bot/), in Visual Studio Code.
+Check out the notebook to see the interaction between an end-user and the recommender chatbot. Although the implemented prototype understands user intent fully (by explicitly feeding it with the appropriate information), for the sake of simplicity, it is not developed as the ReAct-type agent. ReAct (short for *reasoning and acting*) agents are best suited for complex decision-making tasks that require both reasoning over information and taking actions in an environment, especially when those actions can influence what information becomes available next [[Yao2023](#Yao2023)]. As such, ReAct-type agents are perfect candidates for recommender chatbot applications. Development of the ReAct agents with long- and short-term memory could serve as a topic fo future research.
+
+The second part of the notebook is the dedicated to the evaluation of the recommender chatbot: The evaluation is performed in two  stages:
+* **Quantitative evaluation.** This stage focuses on the core of the recommender system: the `Recommender` class. Retrieval accuracy is measured using standard information retrieval metrics: precision, recall, and F1 score. This tells us how well the system can find relevant products from the catalog based on a query.
+* **Qualitative evaluation (LLM-as-a-Judge).** This stage assesses the complete conversational agent's performance. Using a distinct LLM as an impartial judge, the agent's conversational abilities are assessed together with its logical reasoning, tool usage, and overall helpfulness across several test scenarios.
+
+Quantitative evaluation consisted of the few steps:
+* Creating the ground-truth dataset consisting of a query and expected products that should be recommended by the agent.
+* Running the agent for each entry in the ground-truth dataset to get the top 3 recommended product IDs.
+* Calculating qualitative metrics.
+
+Analysis:
+- **Mean recall = 0.94.** The recommender excels at finding most of the relevant items for a given query. This is crucial as we don't want to miss potential sales. In all but one case, it found all the ground-truth relevant items.
+- **Mean precision = 0.61.** The system often includes one irrelevant item in its top-3 recommendations (e.g., recommending hiking boots for a "tech gadgets" query). This indicates that the semantic space has some overlap between categories like "Gear", "Footwear", and "Electronics". While not perfect, this is acceptable for a conversational agent that can then help the user filter the results. However, the main reason for this behavior is the small amount of the products in the mock catalogue and using the fixed number of retrieved products without setting a similarity threshold of any kind.
+- **Mean F1 score = 0.73.** The F1-score provides a balanced view, and a score of 0.73 indicates a strong and effective recommender, especially given the very small and very diverse dataset. The multilingual query was handled without mistake (which should be of the most importance since the agent is focusing on Chinese demographics).
+
+Qualitative evaluation again was performed in a few steps:
+* Using an LLM-as-a-Judge to assess the agent's end-to-end conversational performance.
+* Testing the agent against a set of diverse conversational scenarios, including simple queries, ambiguous requests, multilingual interactions, and out-of-scope questions.
+* Scoring the agent's responses based on a predefined rubric covering query formulation, tool use correctness, helpfulness, and conversational tone.
+
+Analysis:
+* **Excellent core task performance.** The agent excels at its primary function. It correctly interprets direct user requests (in both English and Chinese), uses its tool appropriately, and formulates helpful, persuasive responses based on the retrieved products.
+* **Strong guardrails and safety.** The agent demonstrates crucial reliability by correctly identifying and handling out-of-scope questions. It avoids using its tool for irrelevant queries and informs the user of its limitations, preventing incorrect or hallucinated answers.
+* **Key weakness: handling ambiguity.** The agent's main limitation is its failure to ask clarifying questions for vague inputs (e.g., "I need something for the outdoors"). Instead of seeking more detail, it makes a best-guess tool call, which can lead to suboptimal recommendations. This was addressed by improving the system prompt.
+
+For a detailed breakdown of each scenario and the judge's full analysis, please refer to the Evaluation - Qualitative analysis section in the notebook.
 
 ---
 
@@ -252,3 +269,6 @@ The API key will be provided on demand: mailto:akapet00@gmail.com
 [<a id="Pap2002">Pap2002</a>] &emsp; Papineni, K., Roukos, S., Ward, T., and Zhu, W-J. BLEU: A method for automatic evaluation of machine translation. Proceedings of the 40th Annual Meeting of the Association for Computational Linguistics: ACL 2002. (2002.) https://dl.acm.org/doi/10.3115/1073083.1073135
 
 [<a id="Lin2004">Lin2004</a>] &emsp; Lin, C-Y. ROUGE: A package for automatic evaluation of summaries. Proceedings of the Text Summarization Branches Out (ACL). (2004.) https://aclanthology.org/W04-1013/
+
+[<a id="Yao2023">Yao2023</a>] &emsp; Yao, S., Zhao, J., Yu, D., Du, N., Shafran, I., Narasimhan, L., and Cao, Y. ReAct: Synergizing reasoning and acting in language models. Preprint. (2023.) 
+https://doi.org/10.48550/arXiv.2210.03629
