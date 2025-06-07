@@ -168,7 +168,19 @@ TBA.
 
 ## Showcase
 
-Check out the `prototype.ipynb` notebook.
+Check out the `prototype` subdirectory. Within, there are two notebooks: `simple.ipynb` and `full.ipynb`.
+
+The first one is hand coded and it contains a very simple agentic AI chatbot. The chatbot has the possibility of retrieving historical data on newsletters. It also understands the user intent and has memory to provide better service and maximize the likelihood of selling the advertised products. Its architecture consists of the several components:
+
+---
+
+![alt text](media/prototype-simple.png)
+
+The second prototype is "vibe coded" with the help of Claude Sonnet 4 by Anthropic, and, [as advertised](https://www.anthropic.com/news/claude-4), it truly excels at all coding tasks I tried it on. It is accessed through Cline, [the collaborative AI coder](https://cline.bot/), in Visual Studio Code.
+
+---
+
+⚠️ **NOTE** ⚠️
 
 To run the Anthropic's large language model (LLM) from within the LangChain (provided in the prototype) as:
 
@@ -208,6 +220,8 @@ llm = ChatAnthropic(
 where the API key is defined explicitly.
 
 The API key will be provided on demand: mailto:akapet00@gmail.com
+
+---
 
 ## References
 
